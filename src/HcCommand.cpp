@@ -4,8 +4,8 @@
  * stack and tested in Gazebo SITL
  */
 
-#include <geometry_msgs/Vector3.h>
 #include <ros/ros.h>
+#include <std_msgs/UInt8.h>
 #include <iostream>
 using namespace std;
 
@@ -13,29 +13,25 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "uav_command_node");
   ros::NodeHandle nh;
 
-  ros::Publisher stop_uav_pub =
-      nh.advertise<geometry_msgs::Vector3>("mul/command", 1);
+  ros::Publisher uav_command_pub =
+      nh.advertise<std_msgs::UInt8>("mul/command", 1);
 
   ros::Rate loop_rate(10);
   ros::spinOnce();
 
-  geometry_msgs::Vector3 stop_command;
-
-  stop_command.x = 0;
-  stop_command.y = 0;
-  stop_command.z = 0;
+  std_msgs::UInt8 uav_command;
+  uav_command.data = 0;
 
   int count = 0;
-
   while (ros::ok()) {
     if (count == 0) {
-      cin >> stop_command.x;
+      cin >> uav_command.data;
     }
-    if (count <= 5) stop_uav_pub.publish(stop_command);
+    if (count <= 5) uav_command_pub.publish(uav_command);
 
     if (count > 5) {
-      stop_command.x = 0;
-      stop_uav_pub.publish(stop_command);
+      uav_command.data = 0;
+      uav_command_pub.publish(uav_command);
     }
     count++;
     if (count == 20) count = 0;
