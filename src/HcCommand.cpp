@@ -9,7 +9,8 @@
 #include <iostream>
 using namespace std;
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
   ros::init(argc, argv, "uav_command_node");
   ros::NodeHandle nh;
 
@@ -23,18 +24,18 @@ int main(int argc, char **argv) {
   uav_command.data = 0;
 
   int count = 0;
-  while (ros::ok()) {
-    if (count == 0) {
+  while (ros::ok())
+  {
+    if (count == 0)
+    {
       cin >> uav_command.data;
+      ROS_INFO("uavcommand input %d", uav_command.data);
     }
-    if (count <= 5) uav_command_pub.publish(uav_command);
-
-    if (count > 5) {
-      uav_command.data = 0;
+    if (count <= 5)
       uav_command_pub.publish(uav_command);
-    }
     count++;
-    if (count == 20) count = 0;
+    if (count == 20)
+      count = 0;
     ros::spinOnce();
     loop_rate.sleep();
   }
